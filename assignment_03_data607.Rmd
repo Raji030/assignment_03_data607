@@ -1,0 +1,80 @@
+---
+title: "Assignment_03_607"
+author: "Mahmud Hasan Al Raji"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Required libraries
+```{r}
+library(dplyr)
+library(htmltab)
+library(stringr)
+```
+
+## 1:Identification of majors that contain either "DATA" or "STATISTICS" from Majors dataset,data source:[https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/]
+
+```{r}
+file<- "https://projects.fivethirtyeight.com/mid-levels/college-majors/"
+table1<-htmltab(doc =file, which =1)
+str(table1)
+majors<-table1$MAJOR
+matching <- str_detect(majors, "(?i)statistics|(?i)data")
+majors[matching]
+```
+## 2:Transformation of data to a character vector
+**given data:
+[1] “bell pepper” “bilberry” “blackberry” “blood orange”
+[5] “blueberry” “cantaloupe” “chili pepper” “cloudberry”
+[9] “elderberry” “lime” “lychee” “mulberry”
+[13] “olive” “salal berry”
+
+**required out put:
+c(“bell pepper”, “bilberry”, “blackberry”, “blood orange”, “blueberry”, “cantaloupe”, “chili pepper”, “cloudberry”, “elderberry”, “lime”, “lychee”, “mulberry”, “olive”, “salal berry”)
+
+```{r}
+myword <-('[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+[13] "olive"        "salal berry"')
+
+myword1<-str_extract_all(myword, regex("\\w+..\\w+"))
+myword2<-unlist(myword1)
+class(myword2)
+myword2
+```
+## 3: Description of expressions
+
+**(.)\1\1: any one character repeated twice
+
+**"(.)(.)\\2\\1": a string whose any two characters repeated once but in reverse way
+
+**(..)\1: a pair of any characters repeated once
+
+**"(.).\\1.\\1": a string whose one character (any type) repeated twice with two consecutive periods where each period consisted of one character(any type) 
+
+"(.)(.)(.).*\\3\\2\\1" : a string whose three characters (any type) followed by 0 or more characters of any type  followed by the first three characters in a reverse way 
+
+## 4:Construction of regular expressions to match words:
+
+**matching-1:Start and end with the same character:"(.).+\1$"
+
+```{r }
+matching1<- c("apa", "lol", "nope", "mango", "eighteen")
+str_view(matching1, "(.).+\\1$", match=TRUE)
+```
+
+**matching-2:Contain a repeated pair of letters:"(..).+\1"
+
+```{r }
+matching1<- c("church", "ppeppero", "nope", "mango", "eighteen")
+str_view(matching1, "(..).+\\1", match=TRUE)
+```
+
+**matching-3: Contain one letter repeated in at least three places:"([a-zA-Z])....\1+\1.+"
+
+```{r }
+matching3<- c("okra", "papaya", "banana", "mango", "eighteen")
+str_view(matching3, "([a-zA-Z])....\\1+\\1.+", match=TRUE)
+```
+
